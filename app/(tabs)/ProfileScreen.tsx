@@ -107,7 +107,7 @@ export default function ProfileScreen() {
 
         <View style={styles.content}>{renderContent()}</View>
       </ScrollView>
-      <BottomTabBar activeTab="profile" onTabPress={() => {}} />
+      <BottomTabBar activeTab="profile" />
     </SafeAreaView>
   );
 }

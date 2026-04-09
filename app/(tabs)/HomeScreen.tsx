@@ -14,7 +14,7 @@ export default function HomeScreen() {
         <Text style={styles.title}>Bienvenido a UNVAL</Text>
         <Text style={styles.subtitle}>Tu red social académica</Text>
       </View>
-      <BottomTabBar activeTab="home" onTabPress={() => {}} />
+      <BottomTabBar activeTab="home" />
     </SafeAreaView>
   );
 }

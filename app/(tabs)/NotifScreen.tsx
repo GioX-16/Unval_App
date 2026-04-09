@@ -102,7 +102,7 @@ export default function NotifScreen() {
 
         <View style={styles.bottomPadding} />
       </ScrollView>
-      <BottomTabBar activeTab="alerts" onTabPress={() => {}} />
+      <BottomTabBar activeTab="alerts" />
     </SafeAreaView>
   );
 }

@@ -1,35 +1,46 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { useRouter, usePathname } from 'expo-router';
 import { Theme } from '@/constants/Theme';
 
-interface TabItem {
-  key: string;
-  label: string;
-  icon: string;
-}
-
 interface BottomTabBarProps {
-  activeTab: string;
-  onTabPress: (tab: string) => void;
+  activeTab?: string;
 }
 
-const tabs: TabItem[] = [
-  { key: 'home', label: 'Home', icon: '⌂' },
-  { key: 'explore', label: 'Explore', icon: '🔍' },
-  { key: 'alerts', label: 'Alerts', icon: '🔔' },
-  { key: 'profile', label: 'Profile', icon: '👤' },
+const tabs = [
+  { key: 'home', label: 'Home', icon: '⌂', route: '/(tabs)/HomeScreen' },
+  { key: 'explore', label: 'Explore', icon: '🔍', route: '/(tabs)/ExploreScreen' },
+  { key: 'alerts', label: 'Alerts', icon: '🔔', route: '/(tabs)/NotifScreen' },
+  { key: 'profile', label: 'Profile', icon: '👤', route: '/(tabs)/ProfileScreen' },
 ];
 
-export default function BottomTabBar({ activeTab, onTabPress }: BottomTabBarProps) {
+export default function BottomTabBar({ activeTab }: BottomTabBarProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const getCurrentTab = () => {
+    if (pathname.includes('HomeScreen')) return 'home';
+    if (pathname.includes('ExploreScreen')) return 'explore';
+    if (pathname.includes('NotifScreen')) return 'alerts';
+    if (pathname.includes('ProfileScreen')) return 'profile';
+    return 'home';
+  };
+
+  const currentTab = activeTab || getCurrentTab();
+
+  const handleTabPress = (route: string) => {
+    router.push(route as any);
+  };
+
   return (
     <View style={styles.container}>
       {tabs.map((tab) => {
-        const isActive = activeTab === tab.key;
+        const isActive = currentTab === tab.key;
         return (
           <Pressable
             key={tab.key}
             style={[styles.tabItem, isActive && styles.activeTabItem]}
-            onPress={() => onTabPress(tab.key)}
+            onPress={() => handleTabPress(tab.route)}
           >
             <Text style={[styles.icon, isActive && styles.activeIcon]}>
               {tab.icon}

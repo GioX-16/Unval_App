@@ -14,7 +14,7 @@ export default function ExploreScreen() {
         <Text style={styles.title}>Explorar</Text>
         <Text style={styles.subtitle}>Descubre contenido nuevo</Text>
       </View>
-      <BottomTabBar activeTab="explore" onTabPress={() => {}} />
+      <BottomTabBar activeTab="explore" />
     </SafeAreaView>
   );
 }
