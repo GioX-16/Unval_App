@@ -7,6 +7,8 @@ import BottomTabBar from "@/components/BottomTabBar";
 import ProfileHeader from "@/components/ProfileHeader";
 import TabSelector from "@/components/TabSelector";
 import TopBar from "@/components/TopBar";
+import SideMenu from "@/components/SideMenu";
+import { useAppTheme, useTranslation } from "@/constants/AppContext";
 import { Theme } from "@/constants/Theme";
 
 const TABS = ["Mis Anuncios", "Clases", "Media"];
@@ -16,7 +18,7 @@ const SAMPLE_ADS = [
     id: "1",
     category: "MARKETPLACE",
     timeAgo: "Hace 2h",
-    title: "Vendo libros de Cálculo Diferencial",
+    title: "Vendo libros de Calculo Diferencial",
     description:
       "Libros en excelente estado, incluye problemas resueltos y material de apoyo.",
     price: "$350 MXN",
@@ -25,7 +27,7 @@ const SAMPLE_ADS = [
     id: "2",
     category: "MARKETPLACE",
     timeAgo: "Hace 5h",
-    title: "Busco compañero para proyecto de BD",
+    title: "Busco companero para proyecto de BD",
     description:
       "Necesito alguien para trabajar en el proyecto final de Bases de Datos.",
     price: undefined,
@@ -34,15 +36,18 @@ const SAMPLE_ADS = [
     id: "3",
     category: "MARKETPLACE",
     timeAgo: "Hace 1d",
-    title: "Venta de notas adhesivas y útiles",
+    title: "Venta de notas adhesivas y utiles",
     description:
-      "Paquete completo de útiles escolares, ideales para esta temporada.",
+      "Paquete completo de utiles escolares, ideales para esta temporada.",
     price: "$150 MXN",
   },
 ];
 
 export default function ProfileScreen() {
+  const { colors } = useAppTheme();
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("Mis Anuncios");
+  const [menuVisible, setMenuVisible] = useState(false);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -67,8 +72,8 @@ export default function ProfileScreen() {
             <AdCard
               category="CLASES"
               timeAgo="Hace 3d"
-              title="Tutoría de Matemáticas"
-              description="Clases particulares de cálculo y álgebra lineal para nivel universitario."
+              title="Tutoria de Matematicas"
+              description="Clases particulares de calculo y algebra lineal para nivel universitario."
             />
           </View>
         );
@@ -78,8 +83,8 @@ export default function ProfileScreen() {
             <AdCard
               category="MEDIA"
               timeAgo="Hace 1 sem"
-              title="Fotos del evento de ingeniería"
-              description="Galería de fotos del Hackathon 2024."
+              title="Fotos del evento de ingenieria"
+              description="Galeria de fotos del Hackathon 2024."
             />
           </View>
         );
@@ -89,8 +94,11 @@ export default function ProfileScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
-      <TopBar />
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={["top"]}>
+      <TopBar 
+        onMenuPress={() => setMenuVisible(true)}
+        onSearchPress={() => {}}
+      />
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
@@ -100,7 +108,7 @@ export default function ProfileScreen() {
           username="geovanny_sandino"
           major="ING. SISTEMAS"
           year="SENIOR"
-          bio="Estudiante de Ingeniería en Sistemas Computacionales. Apasionado por el desarrollo web y la inteligencia artificial. Siempre buscando aprender cosas nuevas."
+          bio="Estudiante de Ingenieria en Sistemas Computacionales. Apasionado por el desarrollo web y la inteligencia artificial. Siempre buscando aprender cosas nuevas."
           location="Managua, Nicaragua"
           website="geovannysandino.dev"
         />
@@ -114,6 +122,7 @@ export default function ProfileScreen() {
         <View style={styles.content}>{renderContent()}</View>
       </ScrollView>
       <BottomTabBar activeTab="profile" />
+      <SideMenu visible={menuVisible} onClose={() => setMenuVisible(false)} />
     </SafeAreaView>
   );
 }
@@ -121,7 +130,6 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Theme.colors.background,
   },
   scrollView: {
     flex: 1,

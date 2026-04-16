@@ -1,5 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useAppTheme } from '@/constants/AppContext';
 import { Theme } from '@/constants/Theme';
 
 interface ProfileHeaderProps {
@@ -25,48 +27,50 @@ export default function ProfileHeader({
   website,
   isVerified = true,
 }: ProfileHeaderProps) {
+  const { colors } = useAppTheme();
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.surface }]}>
       <View style={styles.avatarContainer}>
-        <View style={styles.avatar}>
+        <View style={[styles.avatar, { backgroundColor: colors.secondary }]}>
           {avatarUri ? (
             <Image source={{ uri: avatarUri }} style={styles.avatarImage} />
           ) : (
-            <Text style={styles.avatarPlaceholder}>{name[0]}</Text>
+            <Text style={[styles.avatarPlaceholder, { color: colors.primary }]}>{name[0]}</Text>
           )}
         </View>
         {isVerified && (
-          <View style={styles.badge}>
-            <Text style={styles.badgeIcon}>✓</Text>
+          <View style={[styles.badge, { backgroundColor: colors.primary, borderColor: colors.surface }]}>
+            <Ionicons name="checkmark" size={14} color="#FFF" />
           </View>
         )}
       </View>
 
-      <Text style={styles.name}>{name}</Text>
-      <Text style={styles.username}>@{username}</Text>
+      <Text style={[styles.name, { color: colors.text }]}>{name}</Text>
+      <Text style={[styles.username, { color: colors.textSecondary }]}>@{username}</Text>
 
       <View style={styles.badges}>
-        <View style={[styles.badgeTag, styles.majorBadge]}>
-          <Text style={styles.majorBadgeText}>{major}</Text>
+        <View style={[styles.badgeTag, { backgroundColor: colors.secondary }]}>
+          <Text style={[styles.badgeTagText, { color: colors.primary }]}>{major}</Text>
         </View>
-        <View style={[styles.badgeTag, styles.yearBadge]}>
-          <Text style={styles.yearBadgeText}>{year}</Text>
+        <View style={[styles.badgeTag, { backgroundColor: '#F9DCC4' }]}>
+          <Text style={[styles.badgeTagText, { color: colors.primary }]}>{year}</Text>
         </View>
       </View>
 
-      <Text style={styles.bio}>{bio}</Text>
+      <Text style={[styles.bio, { color: colors.text }]}>{bio}</Text>
 
       <View style={styles.metadata}>
         {location && (
           <View style={styles.metaItem}>
-            <Text style={styles.metaIcon}>📍</Text>
-            <Text style={styles.metaText}>{location}</Text>
+            <Ionicons name="location" size={14} color={colors.textSecondary} />
+            <Text style={[styles.metaText, { color: colors.textSecondary }]}>{location}</Text>
           </View>
         )}
         {website && (
           <View style={styles.metaItem}>
-            <Text style={styles.metaIcon}>🔗</Text>
-            <Text style={[styles.metaText, styles.link]}>{website}</Text>
+            <Ionicons name="link" size={14} color={colors.primary} />
+            <Text style={[styles.metaText, { color: colors.primary }]}>{website}</Text>
           </View>
         )}
       </View>
@@ -78,7 +82,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     padding: Theme.spacing.lg,
-    backgroundColor: Theme.colors.white,
     ...Theme.shadow.light,
   },
   avatarContainer: {
@@ -89,7 +92,6 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: Theme.colors.secondary,
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
@@ -101,7 +103,6 @@ const styles = StyleSheet.create({
   avatarPlaceholder: {
     fontSize: 40,
     fontWeight: '600',
-    color: Theme.colors.primary,
   },
   badge: {
     position: 'absolute',
@@ -110,26 +111,17 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#00D4AA',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 3,
-    borderColor: Theme.colors.white,
-  },
-  badgeIcon: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: Theme.colors.white,
   },
   name: {
     fontSize: Theme.fontSize.xl,
     fontWeight: '700',
-    color: Theme.colors.primary,
     marginBottom: Theme.spacing.xs,
   },
   username: {
     fontSize: Theme.fontSize.md,
-    color: Theme.colors.textLight,
     marginBottom: Theme.spacing.md,
   },
   badges: {
@@ -142,25 +134,12 @@ const styles = StyleSheet.create({
     borderRadius: Theme.borderRadius.full,
     marginHorizontal: Theme.spacing.xs,
   },
-  majorBadge: {
-    backgroundColor: Theme.colors.secondary,
-  },
-  majorBadgeText: {
+  badgeTagText: {
     fontSize: Theme.fontSize.xs,
     fontWeight: '600',
-    color: Theme.colors.primary,
-  },
-  yearBadge: {
-    backgroundColor: Theme.colors.accent,
-  },
-  yearBadgeText: {
-    fontSize: Theme.fontSize.xs,
-    fontWeight: '600',
-    color: Theme.colors.primary,
   },
   bio: {
     fontSize: Theme.fontSize.md,
-    color: Theme.colors.textBody,
     textAlign: 'center',
     lineHeight: 22,
     marginBottom: Theme.spacing.md,
@@ -176,16 +155,8 @@ const styles = StyleSheet.create({
     marginHorizontal: Theme.spacing.sm,
     marginVertical: Theme.spacing.xs,
   },
-  metaIcon: {
-    fontSize: 14,
-    marginRight: Theme.spacing.xs,
-  },
   metaText: {
     fontSize: Theme.fontSize.sm,
-    color: Theme.colors.textBody,
-  },
-  link: {
-    color: Theme.colors.primary,
-    textDecorationLine: 'underline',
+    marginLeft: Theme.spacing.xs,
   },
 });

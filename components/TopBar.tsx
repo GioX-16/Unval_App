@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useAppTheme } from '@/constants/AppContext';
 import { Theme } from '@/constants/Theme';
 
 interface TopBarProps {
-  title?: string;
   showLogo?: boolean;
   showSearch?: boolean;
   showMenu?: boolean;
@@ -18,26 +19,30 @@ export default function TopBar({
   onMenuPress,
   onSearchPress,
 }: TopBarProps) {
+  const { colors } = useAppTheme();
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.surface }]}>
       <View style={styles.leftSection}>
         {showMenu && (
           <Pressable onPress={onMenuPress} style={styles.iconButton}>
-            <Text style={styles.menuIcon}>☰</Text>
+            <Ionicons name="menu" size={26} color={colors.icon} />
           </Pressable>
         )}
       </View>
 
       <View style={styles.centerSection}>
         {showLogo && (
-          <Text style={styles.logo}>UNI-VERSE</Text>
+          <View style={styles.logoContainer}>
+            <Ionicons name="school" size={22} color={colors.primary} />
+          </View>
         )}
       </View>
 
       <View style={styles.rightSection}>
         {showSearch && (
           <Pressable onPress={onSearchPress} style={styles.iconButton}>
-            <Text style={styles.searchIcon}>⌕</Text>
+            <Ionicons name="search" size={24} color={colors.icon} />
           </Pressable>
         )}
       </View>
@@ -52,8 +57,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: Theme.spacing.md,
     paddingVertical: Theme.spacing.sm,
-    backgroundColor: Theme.colors.primary,
     height: 56,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0,0,0,0.05)',
   },
   leftSection: {
     flex: 1,
@@ -67,21 +73,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'flex-end',
   },
-  logo: {
-    fontSize: Theme.fontSize.lg,
-    fontWeight: '700',
-    color: Theme.colors.white,
-    letterSpacing: 1,
+  logoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   iconButton: {
     padding: Theme.spacing.xs,
-  },
-  menuIcon: {
-    fontSize: 24,
-    color: Theme.colors.white,
-  },
-  searchIcon: {
-    fontSize: 24,
-    color: Theme.colors.white,
   },
 });

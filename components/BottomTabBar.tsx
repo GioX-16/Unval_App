@@ -1,6 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
 import { useRouter, usePathname } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { useAppTheme } from '@/constants/AppContext';
 import { Theme } from '@/constants/Theme';
 
 interface BottomTabBarProps {
@@ -8,15 +10,16 @@ interface BottomTabBarProps {
 }
 
 const tabs = [
-  { key: 'home', label: 'Home', icon: '⌂', route: '/(tabs)/HomeScreen' },
-  { key: 'explore', label: 'Explore', icon: '🔍', route: '/(tabs)/ExploreScreen' },
-  { key: 'alerts', label: 'Alerts', icon: '🔔', route: '/(tabs)/NotifScreen' },
-  { key: 'profile', label: 'Profile', icon: '👤', route: '/(tabs)/ProfileScreen' },
+  { key: 'home', icon: 'home', route: '/(tabs)/HomeScreen' },
+  { key: 'explore', icon: 'search', route: '/(tabs)/ExploreScreen' },
+  { key: 'alerts', icon: 'notifications', route: '/(tabs)/NotifScreen' },
+  { key: 'profile', icon: 'person', route: '/(tabs)/ProfileScreen' },
 ];
 
 export default function BottomTabBar({ activeTab }: BottomTabBarProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const { colors } = useAppTheme();
 
   const getCurrentTab = () => {
     if (pathname.includes('HomeScreen')) return 'home';
@@ -33,21 +36,20 @@ export default function BottomTabBar({ activeTab }: BottomTabBarProps) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.surface, borderTopColor: colors.border }]}>
       {tabs.map((tab) => {
         const isActive = currentTab === tab.key;
         return (
           <Pressable
             key={tab.key}
-            style={[styles.tabItem, isActive && styles.activeTabItem]}
+            style={[styles.tabItem, isActive && { backgroundColor: colors.secondary }]}
             onPress={() => handleTabPress(tab.route)}
           >
-            <Text style={[styles.icon, isActive && styles.activeIcon]}>
-              {tab.icon}
-            </Text>
-            <Text style={[styles.label, isActive && styles.activeLabel]}>
-              {tab.label}
-            </Text>
+            <Ionicons 
+              name={isActive ? tab.icon : `${tab.icon}-outline` as any} 
+              size={24} 
+              color={isActive ? colors.tabActive : colors.tabInactive} 
+            />
           </Pressable>
         );
       })}
@@ -58,9 +60,7 @@ export default function BottomTabBar({ activeTab }: BottomTabBarProps) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: Theme.colors.white,
     borderTopWidth: 1,
-    borderTopColor: Theme.colors.secondary,
     paddingBottom: 20,
     paddingTop: Theme.spacing.sm,
     ...Theme.shadow.light,
@@ -72,24 +72,5 @@ const styles = StyleSheet.create({
     paddingVertical: Theme.spacing.sm,
     borderRadius: Theme.borderRadius.md,
     marginHorizontal: Theme.spacing.xs,
-  },
-  activeTabItem: {
-    backgroundColor: Theme.colors.secondary,
-  },
-  icon: {
-    fontSize: 22,
-    marginBottom: 2,
-    opacity: 0.6,
-  },
-  activeIcon: {
-    opacity: 1,
-  },
-  label: {
-    fontSize: Theme.fontSize.xs,
-    color: Theme.colors.textLight,
-  },
-  activeLabel: {
-    color: Theme.colors.primary,
-    fontWeight: '600',
   },
 });
