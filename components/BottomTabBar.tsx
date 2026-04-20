@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { useRouter, usePathname } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAppTheme } from '@/constants/AppContext';
@@ -15,6 +16,39 @@ const tabs = [
   { key: 'alerts', icon: 'notifications', route: '/(tabs)/NotifScreen' },
   { key: 'profile', icon: 'person', route: '/(tabs)/ProfileScreen' },
 ];
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+function TabButton({ icon, isActive, onPress, color }: { icon: string; isActive: boolean; onPress: () => void; color: string }) {
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = () => {
+    scale.value = withSpring(0.9, { damping: 15, stiffness: 400 });
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1, { damping: 15, stiffness: 400 });
+  };
+
+  return (
+    <AnimatedPressable
+      style={[styles.tabItem, animatedStyle, isActive && { backgroundColor: '#E8F4FD' }]}
+      onPress={onPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+    >
+      <Ionicons
+        name={isActive ? icon : `${icon}-outline` as any}
+        size={24}
+        color={isActive ? '#0095F6' : color}
+      />
+    </AnimatedPressable>
+  );
+}
 
 export default function BottomTabBar({ activeTab }: BottomTabBarProps) {
   const router = useRouter();
@@ -37,22 +71,15 @@ export default function BottomTabBar({ activeTab }: BottomTabBarProps) {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.surface, borderTopColor: colors.border }]}>
-      {tabs.map((tab) => {
-        const isActive = currentTab === tab.key;
-        return (
-          <Pressable
-            key={tab.key}
-            style={[styles.tabItem, isActive && { backgroundColor: colors.secondary }]}
-            onPress={() => handleTabPress(tab.route)}
-          >
-            <Ionicons 
-              name={isActive ? tab.icon : `${tab.icon}-outline` as any} 
-              size={24} 
-              color={isActive ? colors.tabActive : colors.tabInactive} 
-            />
-          </Pressable>
-        );
-      })}
+      {tabs.map((tab) => (
+        <TabButton
+          key={tab.key}
+          icon={tab.icon}
+          isActive={currentTab === tab.key}
+          color={colors.textSecondary}
+          onPress={() => handleTabPress(tab.route)}
+        />
+      ))}
     </View>
   );
 }
