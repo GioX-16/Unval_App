@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable, Image } from 'react-native';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
-import { useAppTheme, useTranslation } from '@/constants/AppContext';
+import { useAppTheme } from '@/constants/AppContext';
 import { Theme } from '@/constants/Theme';
 
 interface PostCardProps {
@@ -14,6 +15,8 @@ interface PostCardProps {
   comments: number;
 }
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
 export default function PostCard({
   authorName,
   authorRole,
@@ -24,10 +27,30 @@ export default function PostCard({
   comments,
 }: PostCardProps) {
   const { colors } = useAppTheme();
-  const { t } = useTranslation();
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = () => {
+    scale.value = withSpring(0.98, { damping: 15, stiffness: 400 });
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1, { damping: 15, stiffness: 400 });
+  };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+    <AnimatedPressable 
+      style={[
+        styles.container, 
+        animatedStyle,
+        { backgroundColor: colors.surface, borderColor: colors.border }
+      ]}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+    >
       <View style={styles.header}>
         <View style={[styles.avatar, { backgroundColor: colors.secondary }]}>
           <Text style={[styles.avatarText, { color: colors.primary }]}>{authorName[0]}</Text>
@@ -62,7 +85,7 @@ export default function PostCard({
           <Ionicons name="share-outline" size={22} color={colors.iconSecondary} />
         </Pressable>
       </View>
-    </View>
+    </AnimatedPressable>
   );
 }
 
