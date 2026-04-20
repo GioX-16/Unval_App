@@ -1,9 +1,14 @@
-import React from 'react';
-import { View, Text, StyleSheet, Pressable, Switch, ScrollView } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, Pressable, Switch, ScrollView, Dimensions } from 'react-native';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming, runOnJS, Easing } from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppTheme, useTranslation } from '@/constants/AppContext';
 import { Theme } from '@/constants/Theme';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const MENU_WIDTH = 280;
 
 interface SideMenuProps {
   visible: boolean;
@@ -12,14 +17,43 @@ interface SideMenuProps {
 
 export default function SideMenu({ visible, onClose }: SideMenuProps) {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { theme, toggleTheme, setLanguage, language, colors } = useAppTheme();
   const { t } = useTranslation();
 
-  if (!visible) return null;
+  const translateX = useSharedValue(-MENU_WIDTH);
+  const opacity = useSharedValue(0);
+
+  useEffect(() => {
+    if (visible) {
+      translateX.value = withTiming(0, { duration: 300, easing: Easing.out(Easing.cubic) });
+      opacity.value = withTiming(1, { duration: 200 });
+    } else {
+      translateX.value = withTiming(-MENU_WIDTH, { duration: 250, easing: Easing.in(Easing.cubic) });
+      opacity.value = withTiming(0, { duration: 150 });
+    }
+  }, [visible]);
+
+  const menuAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }],
+  }));
+
+  const backdropAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+  }));
 
   const handleNavigation = (route: string) => {
-    onClose();
-    router.push(route as any);
+    translateX.value = withTiming(-MENU_WIDTH, { duration: 200, easing: Easing.in(Easing.cubic) }, () => {
+      runOnJS(onClose)();
+      router.push(route as any);
+    });
+  };
+
+  const handleClose = () => {
+    translateX.value = withTiming(-MENU_WIDTH, { duration: 250, easing: Easing.in(Easing.cubic) });
+    opacity.value = withTiming(0, { duration: 150 }, () => {
+      runOnJS(onClose)();
+    });
   };
 
   const menuItems = [
@@ -30,26 +64,36 @@ export default function SideMenu({ visible, onClose }: SideMenuProps) {
   ];
 
   const bottomItems = [
-    { icon: 'settings', label: t('settings'), route: '/modal' },
-    { icon: 'bookmark', label: t('saved'), route: '/modal' },
-    { icon: 'help-circle', label: 'Ayuda', route: '/modal' },
+    { icon: 'settings-outline', label: t('settings'), route: '/modal' },
+    { icon: 'bookmark-outline', label: t('saved'), route: '/modal' },
+    { icon: 'help-circle-outline', label: 'Ayuda', route: '/modal' },
   ];
 
   return (
-    <View style={styles.overlay}>
-      <Pressable style={styles.backdrop} onPress={onClose} />
-      <View style={[styles.container, { backgroundColor: colors.card }]}>
+    <View style={styles.overlay} pointerEvents={visible ? 'auto' : 'none'}>
+      <Animated.View style={[styles.backdrop, backdropAnimatedStyle]}>
+        <Pressable style={styles.backdropPressable} onPress={handleClose} />
+      </Animated.View>
+
+      <Animated.View 
+        style={[
+          styles.container, 
+          menuAnimatedStyle,
+          { 
+            backgroundColor: colors.surface,
+            paddingTop: insets.top,
+            paddingBottom: insets.bottom,
+          }
+        ]}
+      >
         <View style={[styles.header, { borderBottomColor: colors.border }]}>
           <View style={styles.logoContainer}>
-            <Ionicons name="school" size={28} color={colors.primary} />
+            <Ionicons name="school" size={26} color={colors.primary} />
             <Text style={[styles.logo, { color: colors.text }]}>UNVAL</Text>
           </View>
-          <Pressable onPress={onClose} style={styles.closeButton}>
-            <Ionicons name="close" size={24} color={colors.icon} />
-          </Pressable>
         </View>
 
-        <ScrollView style={styles.content}>
+        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>
               NAVEGACION
@@ -57,7 +101,11 @@ export default function SideMenu({ visible, onClose }: SideMenuProps) {
             {menuItems.map((item, index) => (
               <Pressable
                 key={index}
-                style={[styles.menuItem, { borderBottomColor: colors.separator }]}
+                style={({ pressed }) => [
+                  styles.menuItem, 
+                  { borderBottomColor: colors.separator },
+                  pressed && { backgroundColor: colors.background }
+                ]}
                 onPress={() => handleNavigation(item.route)}
               >
                 <Ionicons name={item.icon as any} size={22} color={colors.icon} />
@@ -73,7 +121,11 @@ export default function SideMenu({ visible, onClose }: SideMenuProps) {
             {bottomItems.map((item, index) => (
               <Pressable
                 key={index}
-                style={[styles.menuItem, { borderBottomColor: colors.separator }]}
+                style={({ pressed }) => [
+                  styles.menuItem, 
+                  { borderBottomColor: colors.separator },
+                  pressed && { backgroundColor: colors.background }
+                ]}
                 onPress={() => handleNavigation(item.route)}
               >
                 <Ionicons name={item.icon as any} size={22} color={colors.icon} />
@@ -88,7 +140,7 @@ export default function SideMenu({ visible, onClose }: SideMenuProps) {
             <View style={styles.settingItem}>
               <Ionicons 
                 name={theme === 'dark' ? 'moon' : 'sunny'} 
-                size={22} 
+                size={20} 
                 color={colors.icon} 
               />
               <Text style={[styles.settingText, { color: colors.text }]}>
@@ -105,20 +157,20 @@ export default function SideMenu({ visible, onClose }: SideMenuProps) {
 
           <View style={[styles.settingRow, { borderTopWidth: 1, borderTopColor: colors.separator, paddingTop: Theme.spacing.md }]}>
             <View style={styles.settingItem}>
-              <Ionicons name="language" size={22} color={colors.icon} />
+              <Ionicons name="globe-outline" size={20} color={colors.icon} />
               <Text style={[styles.settingText, { color: colors.text }]}>{t('language')}</Text>
             </View>
             <View style={styles.languageButtons}>
               <Pressable
                 style={[
                   styles.langButton,
-                  { backgroundColor: language === 'es' ? colors.primary : colors.surface }
+                  language === 'es' && { backgroundColor: colors.primary }
                 ]}
                 onPress={() => setLanguage('es')}
               >
                 <Text style={[
                   styles.langText,
-                  { color: language === 'es' ? colors.surface : colors.textSecondary }
+                  { color: language === 'es' ? '#FFF' : colors.textSecondary }
                 ]}>
                   ES
                 </Text>
@@ -126,13 +178,13 @@ export default function SideMenu({ visible, onClose }: SideMenuProps) {
               <Pressable
                 style={[
                   styles.langButton,
-                  { backgroundColor: language === 'en' ? colors.primary : colors.surface }
+                  language === 'en' && { backgroundColor: colors.primary }
                 ]}
                 onPress={() => setLanguage('en')}
               >
                 <Text style={[
                   styles.langText,
-                  { color: language === 'en' ? colors.surface : colors.textSecondary }
+                  { color: language === 'en' ? '#FFF' : colors.textSecondary }
                 ]}>
                   EN
                 </Text>
@@ -140,35 +192,37 @@ export default function SideMenu({ visible, onClose }: SideMenuProps) {
             </View>
           </View>
         </View>
-      </View>
+      </Animated.View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    flexDirection: 'row',
+    ...StyleSheet.absoluteFillObject,
     zIndex: 1000,
   },
   backdrop: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  backdropPressable: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   container: {
-    width: 300,
-    height: '100%',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: MENU_WIDTH,
     ...Theme.shadow.heavy,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: Theme.spacing.md,
+    paddingHorizontal: Theme.spacing.md,
+    paddingVertical: Theme.spacing.md,
     borderBottomWidth: 1,
   },
   logoContainer: {
@@ -180,25 +234,23 @@ const styles = StyleSheet.create({
     fontSize: Theme.fontSize.xl,
     fontWeight: Theme.fontWeight.bold,
   },
-  closeButton: {
-    padding: Theme.spacing.xs,
-  },
   content: {
     flex: 1,
   },
   section: {
-    paddingTop: Theme.spacing.md,
+    paddingTop: Theme.spacing.sm,
   },
   sectionTitle: {
     fontSize: Theme.fontSize.xs,
     fontWeight: Theme.fontWeight.semibold,
     paddingHorizontal: Theme.spacing.md,
-    marginBottom: Theme.spacing.sm,
+    marginBottom: Theme.spacing.xs,
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: Theme.spacing.md,
+    paddingHorizontal: Theme.spacing.md,
+    paddingVertical: Theme.spacing.md,
     borderBottomWidth: 1,
   },
   menuText: {
@@ -206,7 +258,8 @@ const styles = StyleSheet.create({
     marginLeft: Theme.spacing.md,
   },
   footer: {
-    padding: Theme.spacing.md,
+    paddingHorizontal: Theme.spacing.md,
+    paddingVertical: Theme.spacing.md,
     borderTopWidth: 1,
   },
   settingRow: {
