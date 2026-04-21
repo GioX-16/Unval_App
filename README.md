@@ -3,8 +3,7 @@
 <img width="1608" height="402" alt="Cover_Repo App" src="https://github.com/user-attachments/assets/326c8f6e-9278-47bf-b51b-3deb349dbf72" />
 
 
-
-**UNVAL APP** o **UNI-VERSE-ALL** es una plataforma móvil moderna diseñada para la comunidad universitaria y estudiantil. Facilita la conexión entre estudiantes, el intercambio de recursos a través de un marketplace, la búsqueda de tutorías y la gestión de comunidades académicas.
+**UNVAL APP** o **UNI-VERSE-ALL** es una plataforma móvil moderna diseñada para la comunidad universitaria y estudiantil. Facilita la conexión entre estudiantes, el intercambio de recursos a través de un marketplace, la búsqueda de tutorías y la gestión de comunidades académicas.</ls>
 
 Este proyecto está construido con **React Native** utilizando el ecosistema de **Expo** y **TypeScript**.
 
