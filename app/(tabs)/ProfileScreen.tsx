@@ -10,6 +10,7 @@ import TopBar from "@/components/TopBar";
 import SideMenu from "@/components/SideMenu";
 import { useAppTheme, useTranslation } from "@/constants/AppContext";
 import { Theme } from "@/constants/Theme";
+import { Images } from "@/constants/Images";
 
 const TABS = ["Mis Anuncios", "Clases", "Media"];
 
@@ -106,6 +107,7 @@ export default function ProfileScreen() {
         <ProfileHeader
           name="Geovanny Sandino"
           username="geovanny_sandino"
+          avatarUri={Images.avatars.gio as any}
           major="ING. SISTEMAS"
           year="SENIOR"
           bio="Estudiante de Ingenieria en Sistemas Computacionales. Apasionado por el desarrollo web y la inteligencia artificial. Siempre buscando aprender cosas nuevas."

@@ -1,14 +1,15 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAppTheme } from '@/constants/AppContext';
 import { Theme } from '@/constants/Theme';
 
 interface CreatePostBarProps {
   onPress: () => void;
+  avatarUri?: number;
 }
 
-export default function CreatePostBar({ onPress }: CreatePostBarProps) {
+export default function CreatePostBar({ onPress, avatarUri }: CreatePostBarProps) {
   const { colors } = useAppTheme();
 
   return (
@@ -17,7 +18,11 @@ export default function CreatePostBar({ onPress }: CreatePostBarProps) {
       onPress={onPress}
     >
       <View style={[styles.avatar, { backgroundColor: colors.secondary }]}>
-        <Ionicons name="person" size={20} color={colors.primary} />
+        {avatarUri ? (
+          <Image source={avatarUri} style={styles.avatarImage} />
+        ) : (
+          <Ionicons name="person" size={20} color={colors.primary} />
+        )}
       </View>
       <View style={[styles.input, { backgroundColor: colors.background }]}>
         <Text style={[styles.placeholder, { color: colors.textSecondary }]}>
@@ -47,6 +52,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
+    overflow: 'hidden',
+  },
+  avatarImage: {
+    width: '100%',
+    height: '100%',
   },
   input: {
     flex: 1,

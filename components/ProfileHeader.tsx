@@ -34,7 +34,10 @@ export default function ProfileHeader({
       <View style={styles.avatarContainer}>
         <View style={[styles.avatar, { backgroundColor: colors.secondary }]}>
           {avatarUri ? (
-            <Image source={{ uri: avatarUri }} style={styles.avatarImage} />
+            <Image 
+              source={typeof avatarUri === 'number' ? avatarUri : { uri: avatarUri }} 
+              style={styles.avatarImage} 
+            />
           ) : (
             <Text style={[styles.avatarPlaceholder, { color: colors.primary }]}>{name[0]}</Text>
           )}

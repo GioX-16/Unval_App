@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAppTheme } from '@/constants/AppContext';
 import { Theme } from '@/constants/Theme';
+import { Images } from '@/constants/Images';
 
 interface TopBarProps {
   showLogo?: boolean;
@@ -34,7 +35,7 @@ export default function TopBar({
       <View style={styles.centerSection}>
         {showLogo && (
           <View style={styles.logoContainer}>
-            <Ionicons name="school" size={22} color={colors.primary} />
+            <Image source={Images.logo.main} style={styles.logoImage} resizeMode="contain" />
           </View>
         )}
       </View>
@@ -76,6 +77,10 @@ const styles = StyleSheet.create({
   logoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  logoImage: {
+    width: 30,
+    height: 30,
   },
   iconButton: {
     padding: Theme.spacing.xs,

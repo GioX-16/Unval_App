@@ -8,6 +8,7 @@ import { Theme } from '@/constants/Theme';
 interface PostCardProps {
   authorName: string;
   authorRole: string;
+  authorAvatar?: number;
   content: string;
   imageUri?: string;
   timeAgo: string;
@@ -20,6 +21,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 export default function PostCard({
   authorName,
   authorRole,
+  authorAvatar,
   content,
   imageUri,
   timeAgo,
@@ -53,7 +55,11 @@ export default function PostCard({
     >
       <View style={styles.header}>
         <View style={[styles.avatar, { backgroundColor: colors.secondary }]}>
-          <Text style={[styles.avatarText, { color: colors.primary }]}>{authorName[0]}</Text>
+          {authorAvatar ? (
+            <Image source={authorAvatar} style={styles.avatarImage} />
+          ) : (
+            <Text style={[styles.avatarText, { color: colors.primary }]}>{authorName[0]}</Text>
+          )}
         </View>
         <View style={styles.authorInfo}>
           <Text style={[styles.authorName, { color: colors.text }]}>{authorName}</Text>
@@ -108,6 +114,11 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     justifyContent: 'center',
     alignItems: 'center',
+    overflow: 'hidden',
+  },
+  avatarImage: {
+    width: '100%',
+    height: '100%',
   },
   avatarText: {
     fontSize: Theme.fontSize.lg,

@@ -11,6 +11,7 @@ import FeedFilters from '@/components/FeedFilters';
 import SideMenu from '@/components/SideMenu';
 import { useAppTheme, useTranslation } from '@/constants/AppContext';
 import { Theme } from '@/constants/Theme';
+import { Images } from '@/constants/Images';
 
 const FILTERS = [
   { key: 'all', label: 'Todo' },
@@ -73,7 +74,7 @@ export default function HomeScreen() {
         onSearchPress={() => {}}
       />
       
-      <CreatePostBar onPress={() => setCreatePostModal(true)} />
+      <CreatePostBar onPress={() => setCreatePostModal(true)} avatarUri={Images.avatars.gio as any} />
 
       <FeedFilters 
         filters={FILTERS}

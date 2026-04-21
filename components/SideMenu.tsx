@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Pressable, Switch, ScrollView, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Switch, ScrollView, Dimensions, Image } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, runOnJS, Easing } from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppTheme, useTranslation } from '@/constants/AppContext';
 import { Theme } from '@/constants/Theme';
+import { Images } from '@/constants/Images';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const MENU_WIDTH = 280;
@@ -88,7 +89,7 @@ export default function SideMenu({ visible, onClose }: SideMenuProps) {
       >
         <View style={[styles.header, { borderBottomColor: colors.border }]}>
           <View style={styles.logoContainer}>
-            <Ionicons name="school" size={26} color={colors.primary} />
+            <Image source={Images.logo.main} style={styles.logoImage} resizeMode="contain" />
             <Text style={[styles.logo, { color: colors.text }]}>UNVAL</Text>
           </View>
         </View>
@@ -229,6 +230,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: Theme.spacing.sm,
+  },
+  logoImage: {
+    width: 32,
+    height: 32,
   },
   logo: {
     fontSize: Theme.fontSize.xl,
