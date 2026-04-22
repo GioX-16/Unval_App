@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, ImageSourcePropType } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAppTheme } from '@/constants/AppContext';
 import { Theme } from '@/constants/Theme';
@@ -7,45 +7,77 @@ import { Theme } from '@/constants/Theme';
 interface ProfileHeaderProps {
   name: string;
   username: string;
-  avatarUri?: string;
+  avatarUri?: ImageSourcePropType;
+  coverImage?: ImageSourcePropType;
   major: string;
   year: string;
   bio: string;
   location?: string;
   website?: string;
   isVerified?: boolean;
+  isEditable?: boolean;
+  onEditPress?: () => void;
 }
 
 export default function ProfileHeader({
   name,
   username,
   avatarUri,
+  coverImage,
   major,
   year,
   bio,
   location,
   website,
   isVerified = true,
+  isEditable = false,
+  onEditPress,
 }: ProfileHeaderProps) {
   const { colors } = useAppTheme();
 
   return (
     <View style={[styles.container, { backgroundColor: colors.surface }]}>
-      <View style={styles.avatarContainer}>
-        <View style={[styles.avatar, { backgroundColor: colors.secondary }]}>
-          {avatarUri ? (
-            <Image 
-              source={typeof avatarUri === 'number' ? avatarUri : { uri: avatarUri }} 
-              style={styles.avatarImage} 
-            />
-          ) : (
-            <Text style={[styles.avatarPlaceholder, { color: colors.primary }]}>{name[0]}</Text>
+      <View style={styles.coverContainer}>
+        {coverImage ? (
+          <Image source={coverImage} style={styles.coverImage} />
+        ) : (
+          <View style={[styles.coverPlaceholder, { backgroundColor: colors.secondary }]} />
+        )}
+        {isEditable && (
+          <Pressable 
+            style={[styles.editCoverButton, { backgroundColor: colors.surface }]} 
+            onPress={onEditPress}
+          >
+            <Ionicons name="camera" size={20} color={colors.icon} />
+          </Pressable>
+        )}
+      </View>
+
+      <View style={styles.avatarSection}>
+        <View style={styles.avatarContainer}>
+          <View style={[styles.avatar, { backgroundColor: colors.secondary }]}>
+            {avatarUri ? (
+              <Image 
+                source={avatarUri} 
+                style={styles.avatarImage} 
+              />
+            ) : (
+              <Text style={[styles.avatarPlaceholder, { color: colors.primary }]}>{name[0]}</Text>
+            )}
+          </View>
+          {isVerified && (
+            <View style={[styles.badge, { backgroundColor: colors.primary, borderColor: colors.surface }]}>
+              <Ionicons name="checkmark" size={14} color="#FFF" />
+            </View>
           )}
         </View>
-        {isVerified && (
-          <View style={[styles.badge, { backgroundColor: colors.primary, borderColor: colors.surface }]}>
-            <Ionicons name="checkmark" size={14} color="#FFF" />
-          </View>
+        {isEditable && (
+          <Pressable 
+            style={[styles.editAvatarButton, { backgroundColor: colors.primary }]} 
+            onPress={onEditPress}
+          >
+            <Ionicons name="camera" size={16} color="#FFF" />
+          </Pressable>
         )}
       </View>
 
@@ -77,6 +109,16 @@ export default function ProfileHeader({
           </View>
         )}
       </View>
+
+      {isEditable && (
+        <Pressable 
+          style={[styles.editProfileButton, { borderColor: colors.border }]} 
+          onPress={onEditPress}
+        >
+          <Ionicons name="create" size={16} color={colors.text} />
+          <Text style={[styles.editProfileText, { color: colors.text }]}>Editar perfil</Text>
+        </Pressable>
+      )}
     </View>
   );
 }
@@ -84,12 +126,39 @@ export default function ProfileHeader({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    padding: Theme.spacing.lg,
+    paddingBottom: Theme.spacing.lg,
     ...Theme.shadow.light,
+  },
+  coverContainer: {
+    width: '100%',
+    height: 120,
+    position: 'relative',
+  },
+  coverImage: {
+    width: '100%',
+    height: '100%',
+  },
+  coverPlaceholder: {
+    width: '100%',
+    height: '100%',
+  },
+  editCoverButton: {
+    position: 'absolute',
+    right: Theme.spacing.md,
+    bottom: Theme.spacing.md,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...Theme.shadow.light,
+  },
+  avatarSection: {
+    position: 'relative',
+    marginTop: -50,
   },
   avatarContainer: {
     position: 'relative',
-    marginBottom: Theme.spacing.md,
   },
   avatar: {
     width: 100,
@@ -98,6 +167,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
+    borderWidth: 4,
+    borderColor: '#FFF',
   },
   avatarImage: {
     width: '100%',
@@ -117,10 +188,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 3,
+    borderColor: '#FFF',
+  },
+  editAvatarButton: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   name: {
     fontSize: Theme.fontSize.xl,
     fontWeight: '700',
+    marginTop: Theme.spacing.md,
     marginBottom: Theme.spacing.xs,
   },
   username: {
@@ -146,6 +229,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 22,
     marginBottom: Theme.spacing.md,
+    paddingHorizontal: Theme.spacing.lg,
   },
   metadata: {
     flexDirection: 'row',
@@ -160,6 +244,20 @@ const styles = StyleSheet.create({
   },
   metaText: {
     fontSize: Theme.fontSize.sm,
+    marginLeft: Theme.spacing.xs,
+  },
+  editProfileButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: Theme.spacing.md,
+    paddingHorizontal: Theme.spacing.lg,
+    paddingVertical: Theme.spacing.sm,
+    borderWidth: 1,
+    borderRadius: Theme.borderRadius.md,
+  },
+  editProfileText: {
+    fontSize: Theme.fontSize.sm,
+    fontWeight: '600',
     marginLeft: Theme.spacing.xs,
   },
 });
