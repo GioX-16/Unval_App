@@ -18,11 +18,15 @@ export default function Root({ children }: { children: React.ReactNode }) {
         */}
         <ScrollViewStyleReset />
 
-        {/* Using raw CSS styles as an escape-hatch to ensure the background color never flickers in dark-mode. */}
-        <style dangerouslySetInnerHTML={{ __html: responsiveBackground }} />
-        {/* Add any additional <head> elements that you want globally available on web... */}
+        <style>{`
+          @media (prefers-color-scheme: dark) {
+            body {
+              background-color: #000 !important;
+            }
+          }
+        `}</style>
       </head>
-      <body>{children}</body>
+      <body style={{ backgroundColor: '#fff' }}>{children}</body>
     </html>
   );
 }

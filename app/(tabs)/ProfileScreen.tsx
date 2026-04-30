@@ -27,6 +27,54 @@ import { Theme } from "@/constants/Theme";
 
 const TABS = ["Mis Anuncios", "Clases", "Media"];
 
+const MAX_NAME_LENGTH = 50;
+const MAX_USERNAME_LENGTH = 30;
+const MAX_BIO_LENGTH = 150;
+const MAX_LOCATION_LENGTH = 100;
+const MAX_WEBSITE_LENGTH = 100;
+const MAX_MAJOR_LENGTH = 100;
+
+const sanitizeInput = (input: string): string => {
+  return input.replace(/<[^>]*>/g, "").trim();
+};
+
+const isValidUrl = (url: string): boolean => {
+  if (!url) return true;
+  const urlPattern = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/;
+  return urlPattern.test(url);
+};
+
+const validateProfile = (data: typeof defaultUserData): string | null => {
+  if (!data.name.trim()) {
+    return "El nombre es requerido";
+  }
+  if (data.name.length > MAX_NAME_LENGTH) {
+    return `El nombre no puede exceder ${MAX_NAME_LENGTH} caracteres`;
+  }
+  if (!data.username.trim()) {
+    return "El usuario es requerido";
+  }
+  if (!/^[a-zA-Z0-9_]+$/.test(data.username)) {
+    return "El usuario solo puede contener letras, numeros y guion bajo";
+  }
+  if (data.username.length > MAX_USERNAME_LENGTH) {
+    return `El usuario no puede exceder ${MAX_USERNAME_LENGTH} caracteres`;
+  }
+  if (data.bio.length > MAX_BIO_LENGTH) {
+    return `La biografia no puede exceder ${MAX_BIO_LENGTH} caracteres`;
+  }
+  if (data.location.length > MAX_LOCATION_LENGTH) {
+    return `La ubicacion no puede exceder ${MAX_LOCATION_LENGTH} caracteres`;
+  }
+  if (data.website && !isValidUrl(data.website)) {
+    return "Website URL invalido";
+  }
+  if (data.major.length > MAX_MAJOR_LENGTH) {
+    return `La carrera no puede exceder ${MAX_MAJOR_LENGTH} caracteres`;
+  }
+  return null;
+};
+
 const SAMPLE_ADS = [
   {
     id: "1",
@@ -57,6 +105,18 @@ const SAMPLE_ADS = [
   },
 ];
 
+const defaultUserData = {
+  name: "Usuario Demo",
+  username: "usuario_demo",
+  major: "ING. SISTEMAS",
+  year: "SENIOR",
+  bio: "Estudiante de Ingenieria en Sistemas Computacionales. Apasionado por el desarrollo web y la inteligencia artificial.",
+  location: "Ciudad, Pais",
+  website: "example.com",
+  avatarUri: Images.avatars.gio as ImageSourcePropType,
+  coverImage: undefined as ImageSourcePropType | undefined,
+};
+
 export default function ProfileScreen() {
   const { colors } = useAppTheme();
   const { t } = useTranslation();
@@ -65,17 +125,7 @@ export default function ProfileScreen() {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [isCurrentUser] = useState(true);
 
-  const [userData, setUserData] = useState({
-    name: "Geovanny Sandino",
-    username: "geovanny_sandino",
-    major: "ING. SISTEMAS",
-    year: "SENIOR",
-    bio: "Estudiante de Ingenieria en Sistemas Computacionales. Apasionado por el desarrollo web y la inteligencia artificial. Siempre buscando aprender cosas nuevas.",
-    location: "Managua, Nicaragua",
-    website: "geovannysandino.dev",
-    avatarUri: Images.avatars.gio as ImageSourcePropType,
-    coverImage: undefined as ImageSourcePropType | undefined,
-  });
+  const [userData, setUserData] = useState(defaultUserData);
 
   const pickImage = async (type: "avatar" | "cover") => {
     const permissionResult =
@@ -113,6 +163,21 @@ export default function ProfileScreen() {
   };
 
   const handleSaveProfile = () => {
+    const error = validateProfile(userData);
+    if (error) {
+      Alert.alert("Error de validacion", error);
+      return;
+    }
+
+    setUserData((prev) => ({
+      ...prev,
+      name: sanitizeInput(prev.name),
+      username: sanitizeInput(prev.username).toLowerCase(),
+      bio: sanitizeInput(prev.bio),
+      location: sanitizeInput(prev.location),
+      website: sanitizeInput(prev.website),
+      major: sanitizeInput(prev.major),
+    }));
     setEditModalVisible(false);
   };
 
@@ -312,6 +377,7 @@ export default function ProfileScreen() {
                   }
                   placeholder="Tu nombre"
                   placeholderTextColor={colors.textSecondary}
+                  maxLength={MAX_NAME_LENGTH}
                 />
               </View>
 
@@ -336,6 +402,8 @@ export default function ProfileScreen() {
                   }
                   placeholder="@tuusuario"
                   placeholderTextColor={colors.textSecondary}
+                  maxLength={MAX_USERNAME_LENGTH}
+                  autoCapitalize="none"
                 />
               </View>
 
@@ -363,6 +431,7 @@ export default function ProfileScreen() {
                   placeholderTextColor={colors.textSecondary}
                   multiline
                   numberOfLines={4}
+                  maxLength={MAX_BIO_LENGTH}
                 />
               </View>
 
@@ -387,6 +456,7 @@ export default function ProfileScreen() {
                   }
                   placeholder="Ciudad, Pais"
                   placeholderTextColor={colors.textSecondary}
+                  maxLength={MAX_LOCATION_LENGTH}
                 />
               </View>
 
@@ -412,6 +482,7 @@ export default function ProfileScreen() {
                   placeholder="tuwebsite.com"
                   placeholderTextColor={colors.textSecondary}
                   autoCapitalize="none"
+                  maxLength={MAX_WEBSITE_LENGTH}
                 />
               </View>
 
@@ -436,6 +507,7 @@ export default function ProfileScreen() {
                   }
                   placeholder="ING. SISTEMAS"
                   placeholderTextColor={colors.textSecondary}
+                  maxLength={MAX_MAJOR_LENGTH}
                 />
               </View>
 
