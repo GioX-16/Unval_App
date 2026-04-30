@@ -1,8 +1,8 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, Pressable, ImageSourcePropType } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { useAppTheme } from '@/constants/AppContext';
 import { Theme } from '@/constants/Theme';
+import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { Image, ImageSourcePropType, Pressable, StyleSheet, Text, View } from 'react-native';
 
 interface ProfileHeaderProps {
   name: string;
