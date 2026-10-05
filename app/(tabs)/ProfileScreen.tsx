@@ -272,11 +272,11 @@ export default function ProfileScreen() {
       <SideMenu visible={menuVisible} onClose={() => setMenuVisible(false)} />
 
       <Modal visible={editModalVisible} animationType="slide" transparent>
-        <View style={styles.modalOverlay}>
+        <View style={[styles.modalOverlay, { backgroundColor: colors.overlay }]}>
           <View
             style={[styles.modalContent, { backgroundColor: colors.surface }]}
           >
-            <View style={styles.modalHeader}>
+            <View style={[styles.modalHeader, { borderBottomColor: colors.separator }]}>
               <Pressable onPress={() => setEditModalVisible(false)}>
                 <Ionicons name="close" size={24} color={colors.icon} />
               </Pressable>
@@ -308,7 +308,7 @@ export default function ProfileScreen() {
                       { backgroundColor: colors.primary },
                     ]}
                   >
-                    <Ionicons name="camera" size={20} color="#FFF" />
+                    <Ionicons name="camera" size={20} color={colors.onPrimary} />
                   </View>
                 </Pressable>
               </View>
@@ -351,7 +351,7 @@ export default function ProfileScreen() {
                       { backgroundColor: colors.primary },
                     ]}
                   >
-                    <Ionicons name="image" size={20} color="#FFF" />
+                    <Ionicons name="image" size={20} color={colors.onPrimary} />
                   </View>
                 </Pressable>
               </View>
@@ -561,7 +561,6 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
     justifyContent: "flex-end",
   },
   modalContent: {
@@ -577,7 +576,6 @@ const styles = StyleSheet.create({
     marginBottom: Theme.spacing.md,
     paddingBottom: Theme.spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: "rgba(0,0,0,0.1)",
   },
   modalTitle: {
     fontSize: Theme.fontSize.lg,

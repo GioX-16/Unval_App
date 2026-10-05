@@ -23,7 +23,7 @@ export default function TopBar({
   const { colors } = useAppTheme();
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.surface }]}>
+    <View style={[styles.container, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
       <View style={styles.leftSection}>
         {showMenu && (
           <Pressable onPress={onMenuPress} style={styles.iconButton}>
@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
     paddingVertical: Theme.spacing.sm,
     height: 56,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.05)',
   },
   leftSection: {
     flex: 1,

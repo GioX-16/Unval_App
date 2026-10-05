@@ -19,7 +19,7 @@ const tabs = [
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-function TabButton({ icon, isActive, onPress, color }: { icon: string; isActive: boolean; onPress: () => void; color: string }) {
+function TabButton({ icon, isActive, onPress, color, activeColor, activeBackground }: { icon: string; isActive: boolean; onPress: () => void; color: string; activeColor: string; activeBackground: string }) {
   const scale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -36,7 +36,7 @@ function TabButton({ icon, isActive, onPress, color }: { icon: string; isActive:
 
   return (
     <AnimatedPressable
-      style={[styles.tabItem, animatedStyle, isActive && { backgroundColor: '#E8F4FD' }]}
+      style={[styles.tabItem, animatedStyle, isActive && { backgroundColor: activeBackground }]}
       onPress={onPress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
@@ -44,7 +44,7 @@ function TabButton({ icon, isActive, onPress, color }: { icon: string; isActive:
       <Ionicons
         name={isActive ? icon : `${icon}-outline` as any}
         size={24}
-        color={isActive ? '#0095F6' : color}
+        color={isActive ? activeColor : color}
       />
     </AnimatedPressable>
   );
@@ -77,6 +77,8 @@ export default function BottomTabBar({ activeTab }: BottomTabBarProps) {
           icon={tab.icon}
           isActive={currentTab === tab.key}
           color={colors.textSecondary}
+          activeColor={colors.primary}
+          activeBackground={colors.primarySoft}
           onPress={() => handleTabPress(tab.route)}
         />
       ))}

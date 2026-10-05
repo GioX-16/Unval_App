@@ -39,7 +39,7 @@ export default function AdCard({
       <View style={styles.footer}>
         {price && <Text style={[styles.price, { color: colors.text }]}>{price}</Text>}
         <Pressable style={[styles.button, { backgroundColor: colors.primary }]} onPress={onPress}>
-          <Text style={styles.buttonText}>Ver Detalles</Text>
+          <Text style={[styles.buttonText, { color: colors.onPrimary }]}>Ver Detalles</Text>
         </Pressable>
       </View>
     </Pressable>
@@ -100,6 +100,5 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: Theme.fontSize.sm,
     fontWeight: '600',
-    color: '#FFF',
   },
 });

@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useColorScheme } from 'react-native';
 
+import { darkColors, lightColors, ThemeColors } from './Theme';
+
 export type ThemeMode = 'light' | 'dark';
 export type Language = 'es' | 'en';
 
@@ -10,52 +12,8 @@ interface ThemeContextType {
   setTheme: (theme: ThemeMode) => void;
   toggleTheme: () => void;
   setLanguage: (lang: Language) => void;
-  colors: typeof lightColors;
+  colors: ThemeColors;
 }
-
-const lightColors = {
-  primary: '#0095F6',
-  primaryDark: '#00376B',
-  secondary: '#DBE4EE',
-  accent: '#FF6B6B',
-  background: '#FAFAFA',
-  surface: '#FFFFFF',
-  card: '#FFFFFF',
-  text: '#262626',
-  textSecondary: '#8E8E8E',
-  textLight: '#A0A0A0',
-  border: '#DBE4EE',
-  separator: '#EDEEEE',
-  success: '#4CAF50',
-  error: '#F44336',
-  warning: '#FF9800',
-  icon: '#262626',
-  iconSecondary: '#8E8E8E',
-  tabActive: '#0095F6',
-  tabInactive: '#8E8E8E',
-};
-
-const darkColors = {
-  primary: '#0095F6',
-  primaryDark: '#00376B',
-  secondary: '#363636',
-  accent: '#FF6B6B',
-  background: '#000000',
-  surface: '#121212',
-  card: '#1C1C1E',
-  text: '#FFFFFF',
-  textSecondary: '#A0A0A0',
-  textLight: '#6B6B6B',
-  border: '#363636',
-  separator: '#2C2C2E',
-  success: '#4CAF50',
-  error: '#F44336',
-  warning: '#FF9800',
-  icon: '#FFFFFF',
-  iconSecondary: '#A0A0A0',
-  tabActive: '#0095F6',
-  tabInactive: '#A0A0A0',
-};
 
 interface Translations {
   home: string;

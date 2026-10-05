@@ -23,7 +23,7 @@ function AvatarWithRing({ name, avatarSrc, colors }: { name: string; avatarSrc?:
   return (
     <View style={styles.avatarOuter}>
       <LinearGradient
-        colors={[colors.primary, '#7C3AED']}
+        colors={colors.gradient}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.avatarGradient}
@@ -32,7 +32,7 @@ function AvatarWithRing({ name, avatarSrc, colors }: { name: string; avatarSrc?:
           {avatarSrc ? (
             <Image source={avatarSrc} style={styles.avatarImage} />
           ) : (
-            <Text style={[styles.avatarText, { color: '#FFF' }]}>{name[0]}</Text>
+            <Text style={[styles.avatarText, { color: colors.onPrimary }]}>{name[0]}</Text>
           )}
         </View>
       </LinearGradient>
@@ -40,7 +40,7 @@ function AvatarWithRing({ name, avatarSrc, colors }: { name: string; avatarSrc?:
   );
 }
 
-function LikeButton({ liked, onPress, color, count }: { liked: boolean; onPress: () => void; color: string; count: number }) {
+function LikeButton({ liked, onPress, color, likeColor, count }: { liked: boolean; onPress: () => void; color: string; likeColor: string; count: number }) {
   const scale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -60,9 +60,9 @@ function LikeButton({ liked, onPress, color, count }: { liked: boolean; onPress:
       <Ionicons
         name={liked ? 'heart' : 'heart-outline'}
         size={22}
-        color={liked ? '#FF3B30' : color}
+        color={liked ? likeColor : color}
       />
-      <Text style={[styles.actionText, { color: liked ? '#FF3B30' : color }]}>{count}</Text>
+      <Text style={[styles.actionText, { color: liked ? likeColor : color }]}>{count}</Text>
     </AnimatedPressable>
   );
 }
@@ -111,11 +111,6 @@ export default function PostCard({
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >
-      <LinearGradient
-        colors={['transparent', 'transparent']}
-        style={StyleSheet.absoluteFill}
-      />
-
       <View style={styles.header}>
         <AvatarWithRing name={authorName} avatarSrc={authorAvatar} colors={colors} />
         <View style={styles.authorInfo}>
@@ -136,16 +131,11 @@ export default function PostCard({
       {imageUri && (
         <View style={[styles.imageWrapper, { backgroundColor: colors.background }]}>
           <Image source={{ uri: imageUri }} style={styles.image} resizeMode="cover" />
-          <LinearGradient
-            colors={['transparent', 'rgba(0,0,0,0.02)']}
-            style={styles.imageOverlay}
-            pointerEvents="none"
-          />
         </View>
       )}
 
       <View style={[styles.actions, { borderTopColor: colors.separator }]}>
-        <LikeButton liked={liked} onPress={handleLike} color={colors.iconSecondary} count={likeCount} />
+        <LikeButton liked={liked} onPress={handleLike} color={colors.iconSecondary} likeColor={colors.like} count={likeCount} />
         <Pressable style={styles.actionButton}>
           <Ionicons name="chatbubble-outline" size={21} color={colors.iconSecondary} />
           <Text style={[styles.actionText, { color: colors.iconSecondary }]}>{comments}</Text>
@@ -246,9 +236,6 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
-  },
-  imageOverlay: {
-    ...StyleSheet.absoluteFill,
   },
   actions: {
     flexDirection: 'row',

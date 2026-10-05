@@ -19,7 +19,7 @@ export default function CreatePostBar({ onPress, avatarUri }: CreatePostBarProps
       onPress={onPress}
     >
       <LinearGradient
-        colors={[colors.primary, '#7C3AED']}
+        colors={colors.gradient}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.avatarGradient}
@@ -28,7 +28,7 @@ export default function CreatePostBar({ onPress, avatarUri }: CreatePostBarProps
           {avatarUri ? (
             <Image source={avatarUri} style={styles.avatarImage} />
           ) : (
-            <Ionicons name="person" size={18} color="#FFF" />
+            <Ionicons name="person" size={18} color={colors.onPrimary} />
           )}
         </View>
       </LinearGradient>

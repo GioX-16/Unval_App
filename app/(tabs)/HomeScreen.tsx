@@ -130,7 +130,7 @@ export default function HomeScreen() {
             refreshing={refreshing}
             onRefresh={onRefresh}
             tintColor={colors.primary}
-            colors={[colors.primary, '#7C3AED']}
+            colors={colors.gradient}
             progressBackgroundColor={colors.surface}
           />
         }
@@ -162,9 +162,9 @@ export default function HomeScreen() {
 
       <Modal visible={createPostModal} animationType="slide" transparent>
         <View style={styles.modalOverlay}>
-          <Pressable style={styles.modalBackdrop} onPress={() => setCreatePostModal(false)} />
+          <Pressable style={[styles.modalBackdrop, { backgroundColor: colors.overlay }]} onPress={() => setCreatePostModal(false)} />
           <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
-            <View style={styles.modalHeader}>
+            <View style={[styles.modalHeader, { borderBottomColor: colors.separator }]}>
               <Pressable onPress={() => setCreatePostModal(false)} hitSlop={8}>
                 <Ionicons name="close" size={24} color={colors.icon} />
               </Pressable>
@@ -178,7 +178,7 @@ export default function HomeScreen() {
                   }
                 }}
               >
-                <Text style={styles.postButtonText}>Publicar</Text>
+                <Text style={[styles.postButtonText, { color: colors.onPrimary }]}>Publicar</Text>
               </Pressable>
             </View>
             <TextInput
@@ -241,7 +241,6 @@ const styles = StyleSheet.create({
   },
   modalBackdrop: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalContent: {
     borderTopLeftRadius: Theme.borderRadius.xl,
@@ -256,7 +255,6 @@ const styles = StyleSheet.create({
     marginBottom: Theme.spacing.md,
     paddingBottom: Theme.spacing.sm,
     borderBottomWidth: 0.5,
-    borderBottomColor: 'rgba(0,0,0,0.08)',
   },
   modalTitle: {
     fontSize: Theme.fontSize.lg,
@@ -269,7 +267,6 @@ const styles = StyleSheet.create({
     borderRadius: Theme.borderRadius.md,
   },
   postButtonText: {
-    color: '#FFFFFF',
     fontWeight: Theme.fontWeight.semibold,
     fontSize: Theme.fontSize.sm,
   },

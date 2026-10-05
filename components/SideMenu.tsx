@@ -73,7 +73,7 @@ export default function SideMenu({ visible, onClose }: SideMenuProps) {
   return (
     <View style={styles.overlay} pointerEvents={visible ? 'auto' : 'none'}>
       <Animated.View style={[styles.backdrop, backdropAnimatedStyle]}>
-        <Pressable style={styles.backdropPressable} onPress={handleClose} />
+        <Pressable style={[styles.backdropPressable, { backgroundColor: colors.overlay }]} onPress={handleClose} />
       </Animated.View>
 
       <Animated.View 
@@ -171,7 +171,7 @@ export default function SideMenu({ visible, onClose }: SideMenuProps) {
               >
                 <Text style={[
                   styles.langText,
-                  { color: language === 'es' ? '#FFF' : colors.textSecondary }
+                  { color: language === 'es' ? colors.onPrimary : colors.textSecondary }
                 ]}>
                   ES
                 </Text>
@@ -185,7 +185,7 @@ export default function SideMenu({ visible, onClose }: SideMenuProps) {
               >
                 <Text style={[
                   styles.langText,
-                  { color: language === 'en' ? '#FFF' : colors.textSecondary }
+                  { color: language === 'en' ? colors.onPrimary : colors.textSecondary }
                 ]}>
                   EN
                 </Text>
@@ -208,7 +208,6 @@ const styles = StyleSheet.create({
   },
   backdropPressable: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   container: {
     position: 'absolute',

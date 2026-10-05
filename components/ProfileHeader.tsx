@@ -55,7 +55,7 @@ export default function ProfileHeader({
 
       <View style={styles.avatarSection}>
         <View style={styles.avatarContainer}>
-          <View style={[styles.avatar, { backgroundColor: colors.secondary }]}>
+          <View style={[styles.avatar, { backgroundColor: colors.secondary, borderColor: colors.surface }]}>
             {avatarUri ? (
               <Image 
                 source={avatarUri} 
@@ -67,7 +67,7 @@ export default function ProfileHeader({
           </View>
           {isVerified && (
             <View style={[styles.badge, { backgroundColor: colors.primary, borderColor: colors.surface }]}>
-              <Ionicons name="checkmark" size={14} color="#FFF" />
+              <Ionicons name="checkmark" size={14} color={colors.onPrimary} />
             </View>
           )}
         </View>
@@ -76,7 +76,7 @@ export default function ProfileHeader({
             style={[styles.editAvatarButton, { backgroundColor: colors.primary }]} 
             onPress={onEditPress}
           >
-            <Ionicons name="camera" size={16} color="#FFF" />
+            <Ionicons name="camera" size={16} color={colors.onPrimary} />
           </Pressable>
         )}
       </View>
@@ -88,7 +88,7 @@ export default function ProfileHeader({
         <View style={[styles.badgeTag, { backgroundColor: colors.secondary }]}>
           <Text style={[styles.badgeTagText, { color: colors.primary }]}>{major}</Text>
         </View>
-        <View style={[styles.badgeTag, { backgroundColor: '#F9DCC4' }]}>
+        <View style={[styles.badgeTag, { backgroundColor: colors.accentSoft }]}>
           <Text style={[styles.badgeTagText, { color: colors.primary }]}>{year}</Text>
         </View>
       </View>
@@ -168,7 +168,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     overflow: 'hidden',
     borderWidth: 4,
-    borderColor: '#FFF',
   },
   avatarImage: {
     width: '100%',
@@ -188,7 +187,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 3,
-    borderColor: '#FFF',
   },
   editAvatarButton: {
     position: 'absolute',

@@ -70,18 +70,18 @@ export default function ExploreScreen() {
 
       <View style={styles.tabs}>
         <Pressable
-          style={[styles.tab, activeTab === 'students' && { backgroundColor: colors.primary }]}
+          style={[styles.tab, activeTab === 'students' ? { backgroundColor: colors.primary } : { backgroundColor: colors.primarySoft }]}
           onPress={() => setActiveTab('students')}
         >
-          <Text style={[styles.tabText, activeTab === 'students' && { color: '#FFF' }]}>
+          <Text style={[styles.tabText, { color: activeTab === 'students' ? colors.onPrimary : colors.primary }]}>
             {t('students')}
           </Text>
         </Pressable>
         <Pressable
-          style={[styles.tab, activeTab === 'communities' && { backgroundColor: colors.primary }]}
+          style={[styles.tab, activeTab === 'communities' ? { backgroundColor: colors.primary } : { backgroundColor: colors.primarySoft }]}
           onPress={() => setActiveTab('communities')}
         >
-          <Text style={[styles.tabText, activeTab === 'communities' && { color: '#FFF' }]}>
+          <Text style={[styles.tabText, { color: activeTab === 'communities' ? colors.onPrimary : colors.primary }]}>
             {t('communities')}
           </Text>
         </Pressable>
@@ -155,12 +155,10 @@ const styles = StyleSheet.create({
     paddingVertical: Theme.spacing.sm,
     alignItems: 'center',
     borderRadius: Theme.borderRadius.md,
-    backgroundColor: 'rgba(0,149,246,0.1)',
   },
   tabText: {
     fontSize: Theme.fontSize.md,
     fontWeight: Theme.fontWeight.medium,
-    color: '#0095F6',
   },
   results: {
     flex: 1,
