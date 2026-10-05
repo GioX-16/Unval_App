@@ -13,14 +13,11 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 import AdCard from "@/components/AdCard";
-import BottomTabBar from "@/components/BottomTabBar";
 import ProfileHeader from "@/components/ProfileHeader";
-import SideMenu from "@/components/SideMenu";
 import TabSelector from "@/components/TabSelector";
-import TopBar from "@/components/TopBar";
+import { ScreenContainer } from "@/components/ui";
 import { useAppTheme, useTranslation } from "@/constants/AppContext";
 import { Images } from "@/constants/Images";
 import { Theme } from "@/constants/Theme";
@@ -121,7 +118,6 @@ export default function ProfileScreen() {
   const { colors } = useAppTheme();
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("Mis Anuncios");
-  const [menuVisible, setMenuVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [isCurrentUser] = useState(true);
 
@@ -234,14 +230,7 @@ export default function ProfileScreen() {
   };
 
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: colors.background }]}
-      edges={["top"]}
-    >
-      <TopBar
-        onMenuPress={() => setMenuVisible(true)}
-        onSearchPress={() => {}}
-      />
+    <ScreenContainer activeTab="profile" scroll={false}>
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
@@ -268,8 +257,6 @@ export default function ProfileScreen() {
 
         <View style={styles.content}>{renderContent()}</View>
       </ScrollView>
-      <BottomTabBar activeTab="profile" />
-      <SideMenu visible={menuVisible} onClose={() => setMenuVisible(false)} />
 
       <Modal visible={editModalVisible} animationType="slide" transparent>
         <View style={[styles.modalOverlay, { backgroundColor: colors.overlay }]}>
@@ -538,7 +525,7 @@ export default function ProfileScreen() {
           </View>
         </View>
       </Modal>
-    </SafeAreaView>
+    </ScreenContainer>
   );
 }
 

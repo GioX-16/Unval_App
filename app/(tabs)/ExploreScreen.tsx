@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import { View, ScrollView, StyleSheet, TextInput, Pressable, Text } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
-import TopBar from '@/components/TopBar';
-import BottomTabBar from '@/components/BottomTabBar';
 import { UserCard, CommunityCard } from '@/components/SearchCards';
-import SideMenu from '@/components/SideMenu';
+import { EmptyState, ScreenContainer } from '@/components/ui';
 import { useAppTheme, useTranslation } from '@/constants/AppContext';
 import { Theme } from '@/constants/Theme';
 
@@ -31,7 +28,6 @@ export default function ExploreScreen() {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'students' | 'communities'>('students');
-  const [menuVisible, setMenuVisible] = useState(false);
 
   const filteredStudents = STUDENTS.filter(s => 
     s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -44,12 +40,7 @@ export default function ExploreScreen() {
   );
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
-      <TopBar 
-        onMenuPress={() => setMenuVisible(true)}
-        onSearchPress={() => {}}
-      />
-
+    <ScreenContainer activeTab="explore" scroll={false}>
       <View style={styles.searchContainer}>
         <View style={[styles.searchBar, { backgroundColor: colors.surface, borderColor: colors.border }]}>
           <Ionicons name="search" size={20} color={colors.textSecondary} />
@@ -94,12 +85,11 @@ export default function ExploreScreen() {
               <UserCard key={student.id} {...student} />
             ))
           ) : (
-            <View style={styles.emptyState}>
-              <Ionicons name="person-add" size={48} color={colors.textLight} />
-              <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
-                No se encontraron estudiantes
-              </Text>
-            </View>
+            <EmptyState
+              icon="person-add-outline"
+              title="Sin estudiantes"
+              description="No se encontraron estudiantes con esa búsqueda."
+            />
           )
         ) : (
           filteredCommunities.length > 0 ? (
@@ -107,20 +97,16 @@ export default function ExploreScreen() {
               <CommunityCard key={community.id} {...community} />
             ))
           ) : (
-            <View style={styles.emptyState}>
-              <Ionicons name="people" size={48} color={colors.textLight} />
-              <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
-                No se encontraron comunidades
-              </Text>
-            </View>
+            <EmptyState
+              icon="people-outline"
+              title="Sin comunidades"
+              description="No se encontraron comunidades con esa búsqueda."
+            />
           )
         )}
         <View style={styles.bottomPadding} />
       </ScrollView>
-
-      <BottomTabBar activeTab="explore" />
-      <SideMenu visible={menuVisible} onClose={() => setMenuVisible(false)} />
-    </SafeAreaView>
+    </ScreenContainer>
   );
 }
 

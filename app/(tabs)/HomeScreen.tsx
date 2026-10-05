@@ -1,15 +1,12 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { View, ScrollView, StyleSheet, Pressable, Text, TextInput, Modal, RefreshControl, Animated as RNAnimated, Dimensions } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 
-import TopBar from '@/components/TopBar';
-import BottomTabBar from '@/components/BottomTabBar';
 import CreatePostBar from '@/components/CreatePostBar';
 import PostCard from '@/components/PostCard';
 import FeedFilters from '@/components/FeedFilters';
-import SideMenu from '@/components/SideMenu';
+import { ScreenContainer } from '@/components/ui';
 import { useAppTheme, useTranslation } from '@/constants/AppContext';
 import { Theme } from '@/constants/Theme';
 import { Images } from '@/constants/Images';
@@ -95,7 +92,6 @@ export default function HomeScreen() {
   const { colors } = useAppTheme();
   const { t } = useTranslation();
   const [activeFilter, setActiveFilter] = useState('all');
-  const [menuVisible, setMenuVisible] = useState(false);
   const [createPostModal, setCreatePostModal] = useState(false);
   const [postText, setPostText] = useState('');
   const [refreshing, setRefreshing] = useState(false);
@@ -108,12 +104,7 @@ export default function HomeScreen() {
   }, []);
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
-      <TopBar
-        onMenuPress={() => setMenuVisible(true)}
-        onSearchPress={() => {}}
-      />
-
+    <ScreenContainer activeTab="home" scroll={false}>
       <CreatePostBar onPress={() => setCreatePostModal(true)} avatarUri={Images.avatars.gio as any} />
 
       <FeedFilters
@@ -156,9 +147,6 @@ export default function HomeScreen() {
         style={styles.fadeEdge}
         pointerEvents="none"
       />
-
-      <BottomTabBar activeTab="home" />
-      <SideMenu visible={menuVisible} onClose={() => setMenuVisible(false)} />
 
       <Modal visible={createPostModal} animationType="slide" transparent>
         <View style={styles.modalOverlay}>
@@ -211,7 +199,7 @@ export default function HomeScreen() {
           </View>
         </View>
       </Modal>
-    </SafeAreaView>
+    </ScreenContainer>
   );
 }
 

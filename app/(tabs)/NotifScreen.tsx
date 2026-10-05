@@ -1,40 +1,23 @@
-import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React from 'react';
+import { StyleSheet } from 'react-native';
 
-import TopBar from '@/components/TopBar';
-import BottomTabBar from '@/components/BottomTabBar';
-import SideMenu from '@/components/SideMenu';
-import { useAppTheme } from '@/constants/AppContext';
+import { EmptyState, ScreenContainer } from '@/components/ui';
 
 export default function NotifScreen() {
-  const { colors } = useAppTheme();
-  const [menuVisible, setMenuVisible] = useState(false);
-
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
-      <TopBar 
-        onMenuPress={() => setMenuVisible(true)}
-        onSearchPress={() => {}}
+    <ScreenContainer activeTab="alerts" contentContainerStyle={styles.content}>
+      <EmptyState
+        icon="notifications-outline"
+        title="Sin notificaciones"
+        description="Cuando alguien interactúe contigo o con tus publicaciones, lo verás aquí."
       />
-      <View style={[styles.placeholder, { backgroundColor: colors.surface }]}>
-      </View>
-      <BottomTabBar activeTab="alerts" />
-      <SideMenu visible={menuVisible} onClose={() => setMenuVisible(false)} />
-    </SafeAreaView>
+    </ScreenContainer>
   );
 }
 
-import { Theme } from '@/constants/Theme';
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  placeholder: {
-    flex: 1,
-    marginHorizontal: Theme.spacing.md,
-    marginTop: Theme.spacing.md,
-    borderRadius: Theme.borderRadius.lg,
+  content: {
+    flexGrow: 1,
+    justifyContent: 'center',
   },
 });
