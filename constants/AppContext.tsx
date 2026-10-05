@@ -203,7 +203,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>('es');
 
   useEffect(() => {
-    if (systemColorScheme) {
+    if (systemColorScheme === 'light' || systemColorScheme === 'dark') {
       setTheme(systemColorScheme);
     }
   }, [systemColorScheme]);

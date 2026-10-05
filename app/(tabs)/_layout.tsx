@@ -1,11 +1,12 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
+import { ColorValue } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAppTheme } from '@/constants/AppContext';
 
 function TabBarIcon(props: {
   icon: keyof typeof Ionicons.glyphMap;
-  color: string;
+  color: ColorValue;
   focused: boolean;
 }) {
   return (
