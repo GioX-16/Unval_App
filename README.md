@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/images/readme/banner.jpg" alt="UNVAL — UNI-VERSE-ALL" width="100%" />
+  <img width="1600" height="900" alt="unval" src="https://github.com/user-attachments/assets/18fc6f86-d8fc-4365-b360-2d113ef0afc1" />
 </p>
 
 <!-- Banner: reemplaza `assets/images/readme/banner.jpg` por tu captura para actualizar la portada. -->
